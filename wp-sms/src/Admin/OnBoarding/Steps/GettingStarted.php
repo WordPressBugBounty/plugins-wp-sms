@@ -5,6 +5,8 @@ namespace WP_SMS\Admin\OnBoarding\Steps;
 use WP_SMS\Admin\OnBoarding\StepAbstract;
 use WP_SMS\Option;
 
+if (!defined('ABSPATH')) exit;
+
 class GettingStarted extends StepAbstract
 {
     const COUNTRY_DEFAULT_VALUE = 'global';
@@ -26,14 +28,14 @@ class GettingStarted extends StepAbstract
             'wp-sms-intel-style',
             WP_SMS_URL . 'assets/css/intlTelInput.min.css',
             [],
-            '24.5.0'
+            '24.8.2'
         );
 
         wp_enqueue_script(
             'wp-sms-intel-script',
             WP_SMS_URL . 'assets/js/intel/intlTelInput.min.js',
             ['jquery'],
-            '24.5.0',
+            '24.8.2',
             true
         );
 

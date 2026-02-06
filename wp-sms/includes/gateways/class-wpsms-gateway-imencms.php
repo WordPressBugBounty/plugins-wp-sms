@@ -2,10 +2,12 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class imencms extends \WP_SMS\Gateway
 {
-    private $wsdl_link = "http://www.imencms.com/SMS/sms.asmx?WSDL";
-    public $tariff = "http://www.imencms.com/sms/";
+    private $wsdl_link = "http://www.imencms.ir/SMS/sms.asmx?WSDL";
+    public $tariff = "http://imencms.ir/#SMS";
     public $unitrial = false;
     public $unit;
     public $flash = "enable";

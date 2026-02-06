@@ -1,4 +1,5 @@
 <?php
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 /** @var \WP_SMS\Services\MessageButton\ChatBoxDecorator $chatbox */
 $general_color      = $chatbox->getTextColor() ? sprintf('color: %s!important;', $chatbox->getTextColor()) : '';
 $general_background = $chatbox->getColor() ? sprintf('background-color: %s;', $chatbox->getColor()) : '';
@@ -33,6 +34,7 @@ $footer_color       = $chatbox->getFooterTextColor() ? sprintf('color: %s!import
                 <?php echo esc_html($chatbox->getTitle()); ?>
             </h2>
             <button class="wpsms-chatbox__close-button js-wpsms-chatbox__close-button">
+                <span class="screen-reader-text"><?php esc_html_e('Close', 'wp-sms'); ?></span>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 11L6 6L11 11M11 1L5.99905 6L1 1" stroke="<?php echo esc_attr($general_fill_color) ?>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>

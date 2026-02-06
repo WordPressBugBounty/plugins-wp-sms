@@ -2,6 +2,8 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class cellsynt extends \WP_SMS\Gateway
 {
     private $wsdl_link = "https://se-1.cellsynt.net/sms.php";
@@ -130,7 +132,7 @@ class cellsynt extends \WP_SMS\Gateway
     {
         // Check username and password
         if (!$this->username or !$this->password) {
-            return new \WP_Error('account-credit', esc_html__('The username/password for this gateway is not set', 'wp-sms-pro'));
+            return new \WP_Error('account-credit', esc_html__('The username/password for this gateway is not set', 'wp-sms'));
         }
 
         return true;

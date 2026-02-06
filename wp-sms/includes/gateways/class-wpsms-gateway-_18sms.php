@@ -2,6 +2,8 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class _18sms extends \WP_SMS\Gateway
 {
     private $wsdl_link = "http://18sms.ir/webservice/rest";
@@ -93,7 +95,7 @@ class _18sms extends \WP_SMS\Gateway
     {
         try {
             if (!$this->username or !$this->password) {
-                throw new \Exception(esc_html__('The API Key for this gateway is not set', 'wp-sms-pro'));
+                throw new \Exception(esc_html__('The API Key for this gateway is not set', 'wp-sms'));
             }
 
             $response = $this->request('GET', "{$this->wsdl_link}/user_info", [

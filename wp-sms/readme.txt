@@ -1,22 +1,21 @@
-﻿=== WP SMS – Ultimate SMS & MMS Notifications, OTP, 2FA, and WooCommerce & Forms Integrations ===
+﻿=== WSMS (formerly WP SMS) – SMS & MMS Notifications with OTP and 2FA for WooCommerce ===
 Contributors: veronalabs, mostafa.s1990, kashani
 Donate link: https://wp-sms-pro.com/donate
-Tags: sms, mms, otp, 2fa, notification, woocommerce, forms, twilio, whatsapp
+Tags: sms notifications, otp login, woocommerce sms, 2fa authentication, bulk sms
 Requires at least: 4.1
-Tested up to: 6.8
-Requires PHP: 5.6
-Stable tag: 7.0.3
+Tested up to: 6.9
+Requires PHP: 7.2
+Stable tag: 7.1.1
 License: GPL-2.0+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Send SMS/MMS, OTP, and 2FA directly from WordPress using 300+ gateways like Twilio, WhatsApp, and Plivo. Power up WooCommerce, forms, and memberships with instant SMS alerts.
+Send SMS/MMS notifications, OTP & 2FA messages, and WooCommerce updates with support for multiple gateways and plugin integrations.
 
 == Description ==
-### 🚀 The most complete SMS solution for WordPress
+[WSMS](https://wp-sms-pro.com/?utm_source=wporg&utm_medium=link&utm_campaign=website) lets you send SMS/MMS notifications, one-time passwords (OTP), and two-factor authentication (2FA) messages straight from WordPress. It supports a wide range of SMS gateways and integrates with popular e-commerce and form builder plugins.
 
-[WP SMS](https://wp-sms-pro.com/?utm_source=wporg&utm_medium=link&utm_campaign=website) lets you send SMS/MMS notifications, one-time passwords (OTP), and two-factor authentication (2FA) messages straight from WordPress. It supports **300+ gateways** (Twilio, WhatsApp Business API, Clickatell, BulkSMS, Plivo, and more) and integrates with popular plugins like **WooCommerce, GravityForms, Elementor, and Contact Form 7**.
+**Use WSMS to:**
 
-Use WP SMS to:
 - Keep customers updated on WooCommerce orders
 - Collect subscribers with SMS newsletter forms
 - Secure logins with OTP & 2FA
@@ -25,32 +24,33 @@ Use WP SMS to:
 
 👉 [Check out the demo](https://demo.wp-sms-pro.com/wp-login.php) | [View screenshots](#screenshots) | [See supported gateways](https://wp-sms-pro.com/gateways?utm_source=wporg&utm_medium=link&utm_campaign=gateways) | [Explore integrations](https://wp-sms-pro.com/integrations?utm_source=wporg&utm_medium=link&utm_campaign=integrations)
 
-## ✨ Top Features
-- **Send SMS/MMS:** Send messages via 300+ gateways, including Twilio, WhatsApp, and Clickatell.
-- **WooCommerce & Forms Ready:** Works with WooCommerce, GravityForms, Contact Form 7, Ninja Forms, Formidable, Elementor, and more.
+## ✨ Key Features
+- **Send SMS/MMS:** Send messages through your choice of supported SMS gateways.
+- **E-Commerce & Form Integration:** Seamlessly integrates with popular e-commerce platforms and form builders.
 - **OTP & 2FA:** Add extra login security with one-time passwords and two-factor authentication.
 - **Mobile Login:** Let users log in with their mobile number.
 - **Admin Alerts:** Get notified when new users register, posts are published, or WordPress updates are available.
 - **Newsletters & Widgets:** Build SMS newsletter forms with shortcodes, widgets, or Gutenberg blocks.
 - **Two-Way SMS (All-in-One):** Receive and reply to SMS messages inside WordPress.
-- **Bulk & Scheduled SMS:** Send to thousands of numbers at once, immediately or on schedule.
-- **Zapier Integration:** Connect WP SMS with 5,000+ apps.
-- **Messaging Button:** Let visitors reach you instantly via SMS, WhatsApp, or Telegram.
+- **Bulk & Scheduled SMS:** Send to multiple recipients at once, immediately or on schedule.
+- **Third-Party Integration:** Connect with external services and automation platforms.
+- **Messaging Button:** Let visitors reach you instantly via messaging channels.
 - **GDPR Compliant:** Built with privacy and compliance in mind.
 
-## 💎 Upgrade to WP SMS All-in-One
-Unlock the full power of WP SMS with **All-in-One** — the plan that gives you everything in one package.
+## 💎 Upgrade to WSMS All-in-One
+Unlock additional features with **All-in-One** — the plan that gives you access to all premium add-ons in one package.
 
-With All-in-One you get:
+**With All-in-One you get:**
+
 - Secure login & registration with OTP & 2FA
 - Scheduled & recurring SMS/MMS
 - Two-way SMS inbox
-- WooCommerce Pro (login, checkout verification, order updates)
-- Membership integrations (Paid Memberships Pro, Simple Membership, etc.)
-- Elementor Form SMS
-- FluentCRM, FluentForms, FluentSupport SMS
-- Booking integrations (BookingPress, WooCommerce Appointments, Booking Calendar)
-- URL shortening with Bitly
+- Enhanced e-commerce features (login, checkout verification, order updates)
+- Membership platform integrations
+- Advanced form builder SMS capabilities
+- Marketing automation integrations
+- Booking system compatibility
+- URL shortening service integration
 - All future add-ons included
 
 👉 [See All-in-One details & compare features](https://wp-sms-pro.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=pricing)
@@ -59,29 +59,51 @@ With All-in-One you get:
 - Found a bug? [Open an issue on GitHub](https://github.com/wp-sms/wp-sms/issues/new).
 - Security concerns? Report them via the [Patchstack VDP program](https://patchstack.com/database/wordpress/plugin/wp-sms/vdp).
 
+## 📝 Trademark Notice
+WooCommerce, GravityForms, Elementor, Contact Form 7, Twilio, WhatsApp, Clickatell, BulkSMS, Plivo, Zapier, Bitly, and other product names mentioned are trademarks of their respective owners. WSMS is not affiliated with, endorsed by, or sponsored by these companies.
+
 == Installation ==
 1. Upload `wp-sms` to `/wp-content/plugins/`
 2. Activate via **Plugins → Installed Plugins**
-3. Add the **WP SMS Subscribe** widget to your site
+3. Add the **WSMS Subscribe** widget to your site
 4. (All-in-One users) Enter your license key at **SMS → Settings → License**
 
 📺 [Video Installation Guide](https://www.youtube.com/watch?v=uZVs8DXu_XM)
 
+== Source Code and Build Instructions ==
+
+**Note:** The plugin works out of the box - no build steps required for regular users. This section is for
+developers who want to modify or contribute to the source code.
+
+All source code for minified JavaScript and CSS is included in the plugin:
+
+* JavaScript source: `assets/src/scripts/` → compiled to `assets/js/`
+* Gutenberg blocks: `assets/src/blocks/` → compiled to `assets/blocks/`
+* SCSS source: `assets/src/scss/` → compiled to `assets/css/`
+
+= Third-Party Libraries =
+
+[Chart.js](https://github.com/chartjs/Chart.js), [DataTables](https://github.com/DataTables/DataTables), [flatpickr](https://github.com/flatpickr/flatpickr), [intlTelInput](https://github.com/jackocnr/intl-tel-input), [jquery.repeater](https://github.com/DubFriend/jquery.repeater), [jQuery Word and Character Counter](https://github.com/qwertypants/jQuery-Word-and-Character-Counter-Plugin), [Select2](https://github.com/select2/select2), [Tooltipster](https://github.com/calebjacob/tooltipster)
+
+= Repository =
+
+Full source code: [github.com/wp-sms/wp-sms](https://github.com/wp-sms/wp-sms)
+
 == Frequently Asked Questions ==
-= Who should use WP SMS? =
+= Who should use WSMS? =
 Any WordPress site that wants to enhance communication with users, customers, or subscribers via SMS. Perfect for businesses, bloggers, and e-commerce stores.
 
 = Is technical knowledge required? =
-No. WP SMS is beginner-friendly and well-documented.
+No. WSMS is beginner-friendly and well-documented.
 
-= Is WP SMS GDPR compliant? =
+= Is WSMS GDPR compliant? =
 Yes. It includes tools to manage user data responsibly.
 
-= Does WP SMS support bulk SMS? =
+= Does WSMS support bulk SMS? =
 Yes. It can handle large volumes with asynchronous sending.
 
-= What plugins integrate with WP SMS? =
-WooCommerce, GravityForms, Contact Form 7, BuddyPress, EDD, Elementor, and more. Plus, Zapier connects it to 5,000+ apps.
+= What plugins integrate with WSMS? =
+WSMS integrates with popular e-commerce platforms, form builders, membership systems, and marketing automation tools. See the full list of supported integrations on our website.
 
 = How many SMS can I send? =
 Unlimited — your SMS gateway plan determines limits.
@@ -118,38 +140,23 @@ All premium features + all add-ons in one package.
 - New Onboarding, Add-on Manager, and All-in-One package.
 
 == Changelog ==
-= v7.0.3 - 2025-09-17 =
-- **Enhancement:** Improved Send SMS page performance by loading recipients via AJAX instead of on initial render.
-- **Enhancement:** Prevented sending emails to users who registered with only a phone number.
+= v7.1.1 - 2026-01-28 =
+- **New:** Added `%product_name%` variable support for WooCommerce product notifications.
+- **Security:** Escape output and validate input in Outbox list table.
+- **Fix:** Fixed CF7 "Send to form" field not extracting phone number from form submission.
+- **Fix:** Fixed SMS.to gateway GetCredit() to handle decoded JSON response correctly.
+- **Fix:** Fixed license API cache to prevent excessive requests on multilingual sites.
+- **Fix:** Fixed license conditions for header and notice display separation.
+- **Fix:** Fixed license status image size issue in header.
+- **Fix:** Fixed accessibility issues on privacy page with proper label associations.
 
-= v7.0.2 - 2025-08-18 =
-- **New:** License keys can now be set via `wp-config.php` using constants like `WP_SMS_LICENSE` and are automatically validated on init.
-- **New:** Added plugin information to the Site Health Info section for easier diagnostics.
-- **New:** Added the Threema gateway to Pro gateways
-- **Fix:** Fixed variable rendering in message content.
-- **Fix:** Fixed showing migration failed notice on not valid licenses.
-- **Fix:** Resolved issue where screen options were disappearing on non-plugin-related admin pages.
-- **Fix:** Properly replace special tags (e.g., `%_site_title%`) in message content of CF7.
-- **Fix:** Corrected handling of multiple phone numbers in Contact Form 7 integration so SMS is sent to all recipients, not just the first one.
-- **Fix:** SMS registration now handles duplicate usernames by adding a numeric suffix, allowing re-registration with the same phone number.
-- **Fix:** Only send SMS notifications for published posts matching selected taxonomy term IDs.
-- **Enhancement:** Added user capability checks to AJAX actions in the license manager to restrict access to authorized roles only.
-- **Enhancement:** Removed deprecated SMS gateways: smss, bearsms, mobtexting, waapi, livesms, ozioma, smsgateway, zipwhip, whatsappapi, asr3sms, smsdone, micron, sms_s, tcisms, aradpayamak, dot4all.
-
-= v7.0 - 2025-07-09 =
-- **New:** Introduced an Onboarding Process to simplify gateway integration.
-- **New:** Launched a new Add-on Manager for easier add-on installation and updates.
-- **New:** Introduced WP SMS All-in-One package.
-- **Enhancement:** Removed the FeedbackBird button and its related functionality.
-- **Enhancement:** Integrated NumberParser for better phone number validation.
-- **Enhancement:** Improved newsletter unsubscription handling based on different user inputs.
-- **Enhancement:** Added support for a wider range of CSV MIME types during import.
-- **Enhancement:** Refactored the MeliPayamak gateway for improved reliability.
-- **Enhancement:** Improved overall UX across the plugin.
-- **Fix:** Fixed disappearing billing fields in WooCommerce (Legacy and HPOS modes).
-- **Fix:** Fixed scheduled post notification issues.
-- **Fix:** Removed deprecated gateways.
-- **Fix:** Resolved fatal error when passing invalid meta in notification content.
-- **Fix:** Fixed message logging issues on multisite installations.
+= v7.1 - 2025-12-16 =
+- **New:** Introduced Notifications to receive important updates and promotions.
+- **New:** Added support for the Ghasedak.me gateway.
+- **New:** Added settings for message storage and retention in Outbox and Inbox under "Message Storage & Cleanup".
+- **Enhancement:** Updated PHP requirement to version 7.2.
+- **Enhancement:** Tested up to v6.9
+- **Enhancement:** Improve error handling when PHP SoapClient is unavailable in gateways.
+- **Fix:** Fixed privacy data deletion not removing subscribers from database due to incorrect phone number handling and query format issues.
 
 [See changelog for all versions](https://raw.githubusercontent.com/wp-sms/wp-sms/master/CHANGELOG.md).

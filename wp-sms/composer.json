@@ -1,0 +1,12 @@
+{
+  "autoload": {
+    "psr-4": {
+      "WP_SMS\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": [
+      "PATH=$(composer global config bin-dir --absolute --quiet --testdox):$PATH phpunit"
+    ]
+  }
+}

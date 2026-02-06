@@ -2,6 +2,8 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class adspanel extends \WP_SMS\Gateway
 {
     private $wsdl_link = "http://adspanel.ir/webservice/server.asmx?wsdl";
@@ -18,16 +20,18 @@ class adspanel extends \WP_SMS\Gateway
         $this->validateNumber = "09xxxxxxxx";
         $this->has_key        = true;
 
-        if (!class_exists('nusoap_client')) {
-            include_once WP_SMS_DIR . 'includes/libraries/nusoap.class.php';
+        if (class_exists('nusoap_client')) {
+            $this->client              = new \nusoap_client($this->wsdl_link);
+            $this->client->decode_utf8 = false;
         }
-
-        $this->client              = new \nusoap_client($this->wsdl_link);
-        $this->client->decode_utf8 = false;
     }
 
     public function SendSMS()
     {
+        // Check if nusoap_client class exists
+        if (!class_exists('nusoap_client')) {
+            return new \WP_Error('send-sms', esc_html__('nusoap_client class does not exist. Please enable it in your server configuration.', 'wp-sms'));
+        }
 
         /**
          * Modify sender number
@@ -104,6 +108,11 @@ class adspanel extends \WP_SMS\Gateway
 
     public function GetCredit()
     {
+        // Check if nusoap_client class exists
+        if (!class_exists('nusoap_client')) {
+            return new \WP_Error('account-credit', esc_html__('nusoap_client class does not exist. Please enable it in your server configuration.', 'wp-sms'));
+        }
+
         // Check username and password
         if (!$this->username && !$this->password) {
             return new \WP_Error('account-credit', esc_html__('Username and Password are required.', 'wp-sms'));

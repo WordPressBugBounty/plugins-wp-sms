@@ -1,5 +1,7 @@
  <?php
 
+ if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 use WP_SMS\Admin\LicenseManagement\LicenseHelper;
 use WP_SMS\Admin\LicenseManagement\Plugin\PluginHandler;
 
@@ -33,8 +35,10 @@ if ($step_name !== 'first-step') {
         <?php if ($hasLicense && !$isInstalled) : ?>
             <div class="wp-sms-aio-step__notice">
                 <div>
-                    <?php printf(
-                        __('Your license includes the %s, but it’s not installed yet. Go to the Add-Ons page to install and %s it, so you can start using all its features.', 'wp-sms'),
+                    <?php
+                    printf(
+                        /* translators: 1: add-on name 2: activate text */
+                        __('Your license includes the %1$s, but it\'s not installed yet. Go to the Add-Ons page to install and %2$s it, so you can start using all its features.', 'wp-sms'),
                         '<b>' . esc_attr($addon_name) . '</b>',
                         '<b>' . __('activate', 'wp-sms') . '</b>'
                     ); ?>
@@ -44,8 +48,10 @@ if ($step_name !== 'first-step') {
         <?php if (!$hasLicense && $isActive) : ?>
             <div class="wp-sms-aio-step__notice wp-sms-aio-step__notice--warning">
                 <div>
-                    <?php printf(
-                        __('This add-on does %s, which means it cannot receive updates, including important security updates. For uninterrupted access to updates and to keep your site secure, we strongly recommend activating a license. Activate your license %s.', 'wp-sms'),
+                    <?php
+                    printf(
+                        /* translators: 1: license status text 2: link to license page */
+                        __('This add-on does %1$s, which means it cannot receive updates, including important security updates. For uninterrupted access to updates and to keep your site secure, we strongly recommend activating a license. Activate your license %2$s.', 'wp-sms'),
                         '<b>' . __('not have an active license', 'wp-sms') . '</b>',
                         '<a href="' . esc_url(admin_url('admin.php?page=wp-sms-add-ons')) . '">' . __('here', 'wp-sms') . '</a>'
                     ); ?>
@@ -53,6 +59,6 @@ if ($step_name !== 'first-step') {
             </div>
         <?php endif; ?>
     <?php else: ?>
-        <img class="wp-sms-aio-step__image v-image-lazy" width="509" height="291" data-src="<?php echo WP_SMS_URL . 'assets/images/premium-modal/first-step.png'; ?>">
+        <img class="wp-sms-aio-step__image v-image-lazy" alt="WP SMS All-in-One bundle overview" width="509" height="291" data-src="<?php echo WP_SMS_URL . 'assets/images/premium-modal/first-step.png'; ?>">
     <?php endif; ?>
 </div>

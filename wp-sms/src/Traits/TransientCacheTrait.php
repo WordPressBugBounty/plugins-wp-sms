@@ -2,6 +2,8 @@
 
 namespace WP_SMS\Traits;
 
+if (!defined('ABSPATH')) exit;
+
 /**
  * Trait to handle caching logic.
  * @doc https://github.com/wp-sms/wp-sms/wiki/TransientCacheTrait.md
@@ -46,7 +48,7 @@ trait TransientCacheTrait
     public function setCachedResult($input, $result, $expiration = DAY_IN_SECONDS)
     {
         $cacheKey = $this->getCacheKey($input);
-        return set_transient($cacheKey, $result, $expiration * 24);
+        return set_transient($cacheKey, $result, $expiration);
     }
 
     /**

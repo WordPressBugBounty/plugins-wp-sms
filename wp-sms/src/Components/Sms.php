@@ -5,6 +5,8 @@ namespace WP_SMS\Components;
 use WP_Error;
 use WP_SMS\Helper;
 
+if (!defined('ABSPATH')) exit;
+
 /**
  * Class Sms
  *
@@ -31,6 +33,10 @@ class Sms
     {
         global $sms;
 
+        if (is_null($sms) && function_exists('wp_sms_initial_gateway')) {
+            $sms = wp_sms_initial_gateway();
+        }
+
         $to = $parameters['to'];
 
         // Backward compatibility
@@ -53,10 +59,11 @@ class Sms
             return new WP_Error('empty_message', __('Message content cannot be empty. Please provide a valid SMS message.', 'wp-sms'));
         }
 
-        $sms->isflash = isset($parameters['is_flash']) ? $parameters['is_flash'] : false;
-        $sms->to      = Helper::removeDuplicateNumbers($to);
-        $sms->msg     = $parameters['msg'];
-        $sms->media   = isset($parameters['mediaUrls']) ? $parameters['mediaUrls'] : [];
+        $sms->isflash          = isset($parameters['is_flash']) ? $parameters['is_flash'] : false;
+        $sms->to               = Helper::removeDuplicateNumbers($to);
+        $sms->msg              = $parameters['msg'];
+        $sms->media            = isset($parameters['mediaUrls']) ? $parameters['mediaUrls'] : [];
+        $sms->messageVariables = isset($parameters['messageVariables']) ? $parameters['messageVariables'] : [];
 
         if (isset($parameters['from']) && $parameters['from']) {
             $sms->from = $parameters['from'];

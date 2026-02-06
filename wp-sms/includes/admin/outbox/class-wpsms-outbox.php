@@ -19,6 +19,7 @@ class Outbox_List_Table extends \WP_List_Table
     protected $count;
     protected $adminUrl;
     var $data;
+    protected $bulk_actions_processed = false;
 
     function __construct()
     {
@@ -79,7 +80,7 @@ class Outbox_List_Table extends \WP_List_Table
             'label' => ($item['status'] == 'success' ? esc_html__('Success', 'wp-sms') : esc_html__('Failed', 'wp-sms'))
         ));
 
-        return sprintf('%s <details><summary>%s</summary><p>%s</p></details>', $status, esc_html__('API Response', 'wp-sms'), $item['response']);
+        return sprintf('%s <details><summary>%s</summary><p>%s</p></details>', $status, esc_html__('API Response', 'wp-sms'), esc_html($item['response']));
     }
 
     function column_sender($item)
@@ -99,9 +100,9 @@ class Outbox_List_Table extends \WP_List_Table
         return sprintf(
             '%1$s <span style="color:silver">(ID: #%2$s)</span>%3$s',
             /*$1%s*/
-            $item['sender'],
+            esc_html($item['sender']),
             /*$2%s*/
-            $item['ID'],
+            esc_html($item['ID']),
             /*$3%s*/
             $this->row_actions($actions)
         );
@@ -110,11 +111,14 @@ class Outbox_List_Table extends \WP_List_Table
     function column_cb($item)
     {
         return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+            '<label class="screen-reader-text" for="cb-select-%2$s">%3$s</label><input type="checkbox" name="%1$s[]" value="%2$s" id="cb-select-%2$s" />',
             /*$1%s*/
             $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
             /*$2%s*/
-            $item['ID']                //The value of the checkbox should be the record's id
+            $item['ID'],               //The value of the checkbox should be the record's id
+            /*$3%s*/
+            /* translators: %s: Sender name */
+            sprintf(esc_html__('Select %s', 'wp-sms'), esc_html($item['sender']))
         );
     }
 
@@ -156,6 +160,12 @@ class Outbox_List_Table extends \WP_List_Table
 
     function process_bulk_action()
     {
+        // Skip if bulk actions have already been processed
+        if ($this->bulk_actions_processed) {
+            return;
+        }
+        $this->bulk_actions_processed = true;
+
         $nonce = isset($_GET['_wpnonce']) ? $_GET['_wpnonce'] : false;
 
         //Detect when a bulk action is being triggered...
@@ -335,8 +345,15 @@ class Outbox_List_Table extends \WP_List_Table
         $page_number = ($this->get_pagenum() - 1) * $this->limit;
         $orderby     = "";
 
-        if (isset($_REQUEST['orderby'])) {
-            $orderby .= "ORDER BY {$this->tb_prefix}sms_send.{$_REQUEST['orderby']} {$_REQUEST['order']}";
+        // Allowed columns for ordering to prevent SQL injection
+        $allowed_columns = array('ID', 'sender', 'date', 'message', 'recipient', 'media', 'status');
+        $allowed_orders  = array('asc', 'desc');
+
+        if (isset($_REQUEST['orderby']) && in_array($_REQUEST['orderby'], $allowed_columns, true)) {
+            $order_direction = isset($_REQUEST['order']) && in_array(strtolower($_REQUEST['order']), $allowed_orders, true)
+                ? strtoupper($_REQUEST['order'])
+                : 'ASC';
+            $orderby .= "ORDER BY {$this->tb_prefix}sms_send.{$_REQUEST['orderby']} {$order_direction}";
         } else {
             $orderby .= "ORDER BY date DESC";
         }

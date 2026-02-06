@@ -1,3 +1,4 @@
+<?php if (!defined('ABSPATH')) exit; // Exit if accessed directly ?>
 <div id="wp-sms-export-from" style="display:none;">
     <div class="wpsms-sendsms__overlay">
         <svg class="wpsms-sendsms__overlay__spinner" xmlns="http://www.w3.org/2000/svg" style="margin:auto;background:0 0" width="200" height="200" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block">
@@ -28,19 +29,18 @@
             <?php if (count($groups)) : ?>
                 <tr class="subscribers_group_section">
                     <td>
-                        <select id="wpsms_groups" name="wpsms_groups[]" multiple="true" class="js-wpsmsSelect2TickModal" data-placeholder="<?php esc_html_e('Please select the group(s).', 'wp-sms'); ?>" style="width: 100% !important;">
+                        <select aria-label="<?php esc_attr_e('Select Group', 'wp-sms'); ?>" id="wpsms_groups" name="wpsms_groups[]" multiple="true" class="js-wpsmsSelect2TickModal" data-placeholder="<?php esc_html_e('Please select the group(s).', 'wp-sms'); ?>" style="width: 100% !important;">
                             <?php foreach ($groups as $group): ?>
                                 <option value="<?php echo esc_attr($group->ID); ?>">
                                     <?php echo esc_html__('Group ', 'wp-sms') . esc_html($group->name); ?>
                                 </option>
-
                             <?php endforeach; ?>
                         </select></td>
                 </tr>
             <?php endif; ?>
             <tr>
                 <td>
-                    <p> <?php _e('The data will be exported to a <code>*.csv</code> file.', 'wp-sms'); ?> </p>
+                    <p> <?php echo wp_kses_post(__('The data will be exported to a <code>*.csv</code> file.', 'wp-sms')); ?> </p>
                 </td>
             </tr>
             <tr>

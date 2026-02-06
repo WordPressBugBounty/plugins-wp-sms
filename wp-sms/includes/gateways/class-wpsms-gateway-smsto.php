@@ -2,6 +2,10 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+use Exception;
+
 class smsto extends \WP_SMS\Gateway
 {
     public $wsdl_link = "https://api.sms.to";
@@ -81,35 +85,33 @@ class smsto extends \WP_SMS\Gateway
             $apiURL = "{$this->wsdl_link}/fsms/send";
         }
 
-        $opts = [
-            CURLOPT_URL            => $apiURL,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_ENCODING       => "",
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => 15,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST  => 'POST',
-            CURLOPT_HTTPHEADER     => [
-                'authorization: Bearer ' . $this->has_key,
-                'content-type: application/json',
+        $args = [
+            'method'      => 'POST',
+            'timeout'     => 15,
+            'redirection' => 10,
+            'httpversion' => '1.1',
+            'sslverify'   => false,
+            'headers'     => [
+                'authorization' => 'Bearer ' . $this->has_key,
+                'content-type'  => 'application/json',
             ],
+            'body'        => json_encode($bodyContent),
         ];
 
-        if ($bodyContent) {
-            $opts[CURLOPT_POSTFIELDS] = json_encode($bodyContent);
+        try {
+            $httpResponse = $this->request('POST', $apiURL, $args);
+
+            if (is_wp_error($httpResponse)) {
+                $err      = $httpResponse->get_error_message();
+                $response = null;
+            } else {
+                $response = json_decode(wp_remote_retrieve_body($httpResponse));
+                $err      = null;
+            }
+        } catch (Exception $e) {
+            $err      = $e->getMessage();
+            $response = null;
         }
-
-        $curlSession = curl_init();
-        curl_setopt_array($curlSession, $opts);
-
-        $response = curl_exec($curlSession);
-        $err      = curl_error($curlSession);
-
-        $response = json_decode($response);
-        $err      = json_decode($err);
-
-        curl_close($curlSession);
 
         if ($err) {
             $response = [
@@ -160,7 +162,11 @@ class smsto extends \WP_SMS\Gateway
         /**
          * Send request
          */
-        $response = wp_remote_get($this->tariff . 'api/balance?api_key=' . $this->has_key);
+        try {
+            $response = $this->request('GET', $this->tariff . 'api/balance?api_key=' . $this->has_key);
+        } catch (Exception $e) {
+            return new \WP_Error('account-credit', $e->getMessage());
+        }
 
         /**
          * Make sure the request doesn't have the error
@@ -169,24 +175,24 @@ class smsto extends \WP_SMS\Gateway
             return new \WP_Error('account-credit', $response->get_error_message());
         }
 
-        $responseBody   = wp_remote_retrieve_body($response);
-        $responseObject = json_decode($responseBody);
+        /**
+         * The request() method returns decoded JSON directly (stdClass or array),
+         * not the raw WordPress HTTP response.
+         */
+        $responseObject = $response;
 
         /*
-         * Response validity
+         * Response validity - check if we got a valid response object
          */
-        if (wp_remote_retrieve_response_code($response) == '200') {
-
-            if (isset($responseObject->balance)) {
-                return round($responseObject->balance, 2);
-            }
-
-            return new \WP_Error('account-credit', $responseObject->message);
-
-        } else {
-            $errorResponse = isset($responseObject->message) ? $responseObject->message : $responseObject;
-            return new \WP_Error('account-credit', $errorResponse);
+        if (isset($responseObject->balance)) {
+            return round($responseObject->balance, 2);
         }
+
+        if (isset($responseObject->message)) {
+            return new \WP_Error('account-credit', $responseObject->message);
+        }
+
+        return new \WP_Error('account-credit', esc_html__('Invalid response from SMS.to API', 'wp-sms'));
     }
 
     public function CountNumberOfCharacters()

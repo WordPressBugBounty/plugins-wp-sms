@@ -7,12 +7,22 @@ use WP_SMS\Components\RemoteRequest;
 use WP_SMS\Exceptions\LicenseException;
 use WP_SMS\Utils\AdminHelper;
 use WP_SMS\Traits\TransientCacheTrait;
+use WP_SMS\Admin\LicenseManagement\Plugin\PluginHelper;
+
+if (!defined('ABSPATH')) exit;
 
 class ApiCommunicator
 {
     use TransientCacheTrait;
 
     private $apiUrl = 'https://wp-sms-pro.com' . '/wp-json/wp-license-manager/v1';
+
+    /**
+     * Cache duration for failed requests (5 minutes).
+     * Short duration allows users to retry quickly after fixing license issues
+     * (e.g., adding domain to license, renewing expired license).
+     */
+    const NEGATIVE_CACHE_DURATION = 5 * MINUTE_IN_SECONDS;
 
     /**
      * Get the list of products (add-ons) from the API and cache it for 1 week.
@@ -24,10 +34,11 @@ class ApiCommunicator
     {
         try {
             $remoteRequest = new RemoteRequest('GET', "{$this->apiUrl}/product/list");
-            $plugins       = $remoteRequest->execute(false, true, WEEK_IN_SECONDS);
+            $addons       = $remoteRequest->execute(false, true, WEEK_IN_SECONDS);
 
-            if (empty($plugins) || !is_array($plugins)) {
+            if (empty($addons) || !is_array($addons)) {
                 throw new Exception(
+                    /* translators: %s: API URL */
                     sprintf(__('No products were found. The API returned an empty response from the following URL: %s', 'wp-sms'), "{$this->apiUrl}/product/list")
                 );
             }
@@ -39,51 +50,88 @@ class ApiCommunicator
             );
         }
 
-        return $plugins;
+        return $addons;
     }
 
     /**
-     * Get the download link for the specified plugin using the license key.
+     * Generate a cache key for product info.
      *
-     * @param string $licenseKey
-     * @param string $pluginSlug
+     * The key is site-specific to handle:
+     * - Multisite with subdomains (each subsite may have different license)
+     * - Multisite with subdirectories
+     * - Single site with multilingual plugins (WPML, Polylang) where home_url() varies by language
      *
-     * @return string|null The download URL if found, null otherwise
-     * @throws Exception if the API call fails
+     * @param string $addonSlug  The add-on slug.
+     * @param string $licenseKey The license key.
+     *
+     * @return string The cache key.
      */
-    public function getDownloadUrl($licenseKey, $pluginSlug)
+    private function getProductInfoCacheKey($addonSlug, $licenseKey)
     {
-        $remoteRequest = new RemoteRequest('GET', "{$this->apiUrl}/product/download", [
-            'license_key' => $licenseKey,
-            'domain'      => home_url(),
-            'plugin_slug' => $pluginSlug,
-        ]);
+        // Use blog ID for multisite to ensure each subsite has its own cache
+        // For single sites, this will always be 1
+        $siteIdentifier = get_current_blog_id();
 
-        return $remoteRequest->execute(true, true, DAY_IN_SECONDS);
+        return 'wp_sms_product_info_' . md5($addonSlug . '_' . $licenseKey . '_' . $siteIdentifier);
     }
 
     /**
-     * Get the download URL for a specific plugin slug from the license status.
+     * Clear cached product info for a specific add-on and license.
      *
-     * @param string $licenseKey
-     * @param string $pluginSlug
+     * Call this method when license is validated/changed to ensure fresh data.
      *
-     * @return string|null The download URL if found, null otherwise
-     * @throws Exception
+     * @param string $licenseKey The license key.
+     * @param string $addonSlug  The add-on slug (optional, clears all if not provided).
+     *
+     * @return void
      */
-    public function getDownloadUrlFromLicense($licenseKey, $pluginSlug)
+    public function clearProductInfoCache($licenseKey, $addonSlug = null)
     {
-        // Validate the license and get the licensed products
-        $licenseStatus = $this->validateLicense($licenseKey, $pluginSlug);
-
-        // Search for the download URL in the licensed products
-        foreach ($licenseStatus->products as $product) {
-            if ($product->slug === $pluginSlug) {
-                return isset($product->download_url) ? $product->download_url : null;
+        if ($addonSlug) {
+            delete_transient($this->getProductInfoCacheKey($addonSlug, $licenseKey));
+        } else {
+            // Clear cache for all known add-ons when no specific slug provided
+            foreach (array_keys(PluginHelper::$plugins) as $addon) {
+                delete_transient($this->getProductInfoCacheKey($addon, $licenseKey));
             }
         }
+    }
 
-        return null;
+    /**
+     * Get the product info for the specified add-on
+     *
+     * @param string $licenseKey
+     * @param string $addonSlug
+     *
+     * @return object|null The product info if found, null otherwise
+     * @throws Exception if the API call fails
+     */
+    public function getProductInfo($licenseKey, $addonSlug)
+    {
+        $cacheKey = $this->getProductInfoCacheKey($addonSlug, $licenseKey);
+
+        // Check for negative cache (failed requests cached for 5 minutes)
+        $cached = get_transient($cacheKey);
+        if ($cached !== false && is_object($cached) && isset($cached->_negative_cache)) {
+            return null;
+        }
+
+        try {
+            $remoteRequest = new RemoteRequest('GET', "{$this->apiUrl}/product/download", [
+                'license_key' => $licenseKey,
+                'domain'      => home_url(),
+                'plugin_slug' => $addonSlug,
+            ]);
+
+            // Use custom cache key for proper multisite/multilingual support
+            return $remoteRequest->execute(true, true, DAY_IN_SECONDS, $cacheKey);
+
+        } catch (Exception $e) {
+            // Negative cache: store failed requests for 5 minutes to prevent API hammering
+            // while still allowing users to retry quickly after fixing issues
+            set_transient($cacheKey, (object)['_negative_cache' => true], self::NEGATIVE_CACHE_DURATION);
+            throw $e;
+        }
     }
 
     /**
@@ -97,7 +145,7 @@ class ApiCommunicator
      */
     public function validateLicense($licenseKey, $product = false)
     {
-        if (empty($licenseKey) || !AdminHelper::isStringLengthBetween($licenseKey, 32, 40) || !preg_match('/^[a-zA-Z0-9]+$/', $licenseKey)) {
+        if (empty($licenseKey) || !AdminHelper::isStringLengthBetween($licenseKey, 32, 40) || !preg_match('/^[a-zA-Z0-9-]+$/', $licenseKey)) {
             throw new LicenseException(
                 esc_html__('License key is not valid. Please enter a valid license and try again.', 'wp-sms'),
                 'invalid_license'
@@ -140,11 +188,16 @@ class ApiCommunicator
             $productSlugs = array_column($licenseData->products, 'slug');
 
             if (!in_array($product, $productSlugs, true)) {
+                /* translators: %s: Add-On name */
                 throw new LicenseException(sprintf(__('The license is not related to the requested Add-On <b>%s</b>.', 'wp-sms'), $product));
             }
         }
 
         LicenseHelper::storeLicense($licenseKey, $licenseData);
+
+        // Clear product info cache on successful license validation
+        // This ensures fresh download URLs after license changes (renewal, domain addition, etc.)
+        $this->clearProductInfoCache($licenseKey);
 
         return $licenseData;
     }

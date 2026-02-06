@@ -1,6 +1,57 @@
+= v7.1.1 - 2026-01-28 =
+- **New:** Added `%product_name%` variable support for WooCommerce product notifications.
+- **Security:** Escape output and validate input in Outbox list table.
+- **Fix:** Fixed CF7 "Send to form" field not extracting phone number from form submission.
+- **Fix:** Fixed SMS.to gateway GetCredit() to handle decoded JSON response correctly.
+- **Fix:** Fixed license API cache to prevent excessive requests on multilingual sites.
+- **Fix:** Fixed license conditions for header and notice display separation.
+- **Fix:** Fixed license status image size issue in header.
+- **Fix:** Fixed accessibility issues on privacy page with proper label associations.
+
+= v7.1 - 2025-12-16 =
+- **New:** Introduced Notifications to receive important updates and promotions.
+- **New:** Added support for the Ghasedak.me gateway.
+- **New:** Added settings for message storage and retention in Outbox and Inbox under "Message Storage & Cleanup".
+- **Enhancement:** Updated PHP requirement to version 7.2.
+- **Enhancement:** Tested up to v6.9
+- **Enhancement:** Improve error handling when PHP SoapClient is unavailable in gateways.
+- **Fix:** Fixed privacy data deletion not removing subscribers from database due to incorrect phone number handling and query format issues.
+
+= v7.0.10 - 2025-12-01 =
+- **Enhancement:** Refactored plugin architecture for better add-on extensibility.
+- **Enhancement:** Added new filters and hooks for developers.
+- **Fix:** Minor bug fixes and improvements.
+
+= v7.0.9 - 2025-11-26 =
+- **Enhancement:** Minor improvements.
+
+= v7.0.8 - 2025-11-23 =
+- **Enhancement:** Repositioned the "All-in-One Required" label to the top of the PRO gateway onboarding table for better visibility.
+- **Enhancement:** Added more plugin details to the Site Health Info section for easier diagnostics.
+- **Enhancement:** Removed deprecated `utf8_decode()` usage in `nusoap.class.php`.
+- **Enhancement:** Updated libraries and cleaned up assets.
+- **Fix:** Fixed incorrect changelog URL links in add-ons.
+- **Fix:** Fixed connection status display and moved the Connection Status section below the Gateway Guide for improved UI
+- **Fix:** Fixed SCSS Compilation Error in mail.css
+
+= v7.0.4 - 2025-11-02 =
+- **New:** Added support for the SMS.es gateway.
+- **New:** Display an admin notice when the gateway version changes, required fields are missing, or the gateway is not configured.
+- **Enhancement:** Added support for Service-Line SMS.ir template-based messaging.
+- **Enhancement:** Refactored the MeliPayamak gateway for better stability and reliability.
+- **Enhancement:** Improved Kavenegar gateway to support template-based SMS messages with variable placeholders.
+- **Enhancement:** Refactored the FARAZSMS gateway for improved reliability.
+- **Fix:** Disabled caching to prevent duplicate responses for identical messages.
+- **Fix:** Ensured PHP 8.1+ compatibility by avoiding "Automatic conversion of false to array" warnings.
+- **Fix:** Delayed the anonymous data opt-in notice to appear 7 days after plugin activation.
+- **Fix:** Masked sensitive variables (`code`, `otp`, `post_password`, `coupon_code`) in logs when `WP_DEBUG` is disabled.
+- **Fix:** Fixed issues on the Integrations > Contact Form 7 page where saving changes cleared Settings > General values, the Status field didn't update correctly, and no notification was shown after saving.
+- **Fix:** Fixed SMS Credit link in Dashboard "At a Glance" widget to correctly redirect to gateway settings tab.
+- **Fix:** Properly save SMS gateway version during onboarding to prevent false “setup requires attention” warnings.
+
 = v7.0.3 - 2025-09-17 =
 - **Enhancement:** Improved Send SMS page performance by loading recipients via AJAX instead of on initial render.  
-- **Enhancement:** Prevented sending emails to users who registered with only a phone number. 
+- **Enhancement:** Prevented sending emails to users who registered with only a phone number.
 
 = v7.0.2 - 2025-08-18 =
 - **New:** License keys can now be set via `wp-config.php` using constants like `WP_SMS_LICENSE` and are automatically validated on init.

@@ -2,6 +2,8 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class _0098sms extends \WP_SMS\Gateway
 {
     private $wsdl_link = "https://webservice.0098sms.com/service.asmx?wsdl";
@@ -103,6 +105,10 @@ class _0098sms extends \WP_SMS\Gateway
         // Check username and password
         if (!$this->username && !$this->password) {
             return new \WP_Error('account-credit', esc_html__('API username or API password is not entered.', 'wp-sms'));
+        }
+
+        if (!class_exists('SoapClient')) {
+            return new \WP_Error('required-class', esc_html__('Class SoapClient not found. please enable php_soap in your php.', 'wp-sms'));
         }
 
         try {

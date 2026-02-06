@@ -2,6 +2,8 @@
 
 namespace WP_SMS\Gateway;
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 class nesssolution extends \WP_SMS\Gateway
 {
     private $wsdl_link = "https://traffic.sales.lv/API:0.16/";
@@ -111,7 +113,7 @@ class nesssolution extends \WP_SMS\Gateway
     {
         try {
             if (!$this->has_key) {
-                throw new \Exception(esc_html__('The API Key for this gateway is not set', 'wp-sms-pro'));
+                throw new \Exception(esc_html__('The API Key for this gateway is not set', 'wp-sms'));
             }
 
             return 1;

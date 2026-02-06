@@ -7,6 +7,8 @@ use WP_SMS\Components\Sms;
 use WP_SMS\Option;
 use WP_SMS\Utils\Request;
 
+if (!defined('ABSPATH')) exit;
+
 class OnBoardingTestGateway extends AjaxControllerAbstract
 {
     protected $action = 'wp_sms_test_gateway';
@@ -41,6 +43,9 @@ class OnBoardingTestGateway extends AjaxControllerAbstract
 
         foreach ($fields as $key => $field) {
             Option::updateOption($field['id'], $this->get($field['id']));
+
+            $newValue          = Option::getOption($field['id']);
+            $this->sms->{$key} = $newValue;
         }
 
         try {

@@ -1,9 +1,12 @@
+<?php if (!defined('ABSPATH')) exit; // Exit if accessed directly ?>
 <div class="notice notice-<?php echo esc_attr($notice['class'] ?? 'default'); ?> wpsms-admin-notice">
     <h2 class="notice-title">
         <?php echo esc_html($notice['message']['title'] ?? 'Default Title'); ?>
         <?php if ($notice['is_dismissible']) : ?>
             <?php if ($dismissUrl) : ?>
-                <a href="<?php echo esc_url($dismissUrl); ?>" class="notice--dismiss"></a>
+                <a href="<?php echo esc_url($dismissUrl); ?>" class="notice--dismiss">
+                    <span class="screen-reader-text"><?php echo esc_html__('Dismiss this notice.', 'wp-sms'); ?></span>
+                </a>
             <?php endif; ?>
         <?php endif; ?>
     </h2>

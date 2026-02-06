@@ -8,6 +8,8 @@ use WP_SMS\Components\RemoteRequest;
 use WP_SMS\Option;
 use WP_SMS\Utils\Request;
 
+if (!defined('ABSPATH')) exit;
+
 class SmsGateway extends StepAbstract
 {
     const CACHE_DURATION = 43200; // 12 hours in seconds
@@ -32,9 +34,7 @@ class SmsGateway extends StepAbstract
         try {
             do {
                 $request = new RemoteRequest('get', "https://wp-sms-pro.com/wp-json/wp/v2/gateway?per_page=100&page={$page}");
-
                 $response = $request->execute(true, true, self::CACHE_DURATION);
-
 
                 if (is_array($response) && !empty($response)) {
                     $gateways = array_merge($gateways, $response);
@@ -42,8 +42,10 @@ class SmsGateway extends StepAbstract
                 } else {
                     break;
                 }
+
             } while (count($response) === 100);
         } catch (Exception $e) {
+            /* translators: %s: error message */
             error_log(sprintf(__('Error fetching pages: %s', 'wp-sms'), $e->getMessage()));
         }
 

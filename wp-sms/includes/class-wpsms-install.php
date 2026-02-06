@@ -2,6 +2,8 @@
 
 namespace WP_SMS;
 
+use WP_SMS\Option;
+
 if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
@@ -36,11 +38,15 @@ class Install
             foreach ($blog_ids as $blog_id) {
                 switch_to_blog($blog_id);
 
+                self::checkIsFresh();
+
                 call_user_func(array(__CLASS__, $method));
 
                 restore_current_blog();
             }
         } else {
+            self::checkIsFresh();
+
             call_user_func(array(__CLASS__, $method));
         }
     }
@@ -216,6 +222,17 @@ class Install
             self::createSmsOtpTable();
             self::createSmsOtpAttemptsTable();
 
+            /**
+             * Initialize default plugin options during upgrade.
+             */
+            if (version_compare($installer_wpsms_ver, '7.1', '<')) {
+                Option::updateOption('display_notifications', 1);
+                Option::updateOption('store_outbox_messages', 1);
+                Option::updateOption('outbox_retention_days', 90);
+                Option::updateOption('store_inbox_messages', 1);
+                Option::updateOption('inbox_retention_days', 90);
+            }
+
             update_option('wp_sms_db_version', WP_SMS_VERSION);
         }
 
@@ -308,6 +325,27 @@ class Install
                 PRIMARY KEY  (ID),
                 KEY (phone_number)) $charset_collate";
             return dbDelta($query);
+        }
+    }
+
+    /**
+     * Checks whether the plugin is a fresh installation.
+     *
+     * @return void
+     */
+    private static function checkIsFresh()
+    {
+        $version = get_option('wp_sms_db_version');
+
+        if (empty($version)) {
+            update_option('wp_sms_is_fresh', true);
+        } else {
+            update_option('wp_sms_is_fresh', false);
+        }
+
+        $installationTime = get_option('wp_sms_installation_time');
+        if (empty($installationTime)) {
+            update_option('wp_sms_installation_time', time());
         }
     }
 }

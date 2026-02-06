@@ -6,6 +6,9 @@ use WC_Blocks_Utils;
 use WP_Error;
 use WP_SMS\Components\NumberParser;
 use WP_SMS\Utils\OptionUtil;
+use WP_SMS\Utils\TimeZone;
+
+if (!defined('ABSPATH')) exit;
 
 /**
  * Class WP_SMS
@@ -476,16 +479,6 @@ class Helper
     }
 
     /**
-     * @return void
-     */
-    public static function maybeStartSession($readAndClose = true)
-    {
-        if (empty(session_id()) && !headers_sent()) {
-            session_start(array('read_and_close' => $readAndClose));
-        }
-    }
-
-    /**
      * This function adds mobile country code to the mobile number if the mobile country code option is enabled.
      *
      * @param $mobileNumber
@@ -590,7 +583,7 @@ class Helper
         // Get the default country code without leading + sign
         $countryCode = substr(Option::getOption('mobile_county_code'), 1);
 
-        // Check if the number starts with + sign 
+        // Check if the number starts with + sign
         /*if (strpos($number, '+') === 0) {
             // Remove the + sign from the beginning of each number
             $number = substr($number, 1);
@@ -732,5 +725,29 @@ class Helper
         }
 
         return $default_manage_cap;
+    }
+
+    /**
+     * Retrieve the country code associated with the site's configured timezone.
+     *
+     * @return string|null
+     */
+    public static function getTimezoneCountry()
+    {
+        $timezone    = get_option('timezone_string');
+        $countryCode = TimeZone::getCountry($timezone);
+        return $countryCode;
+    }
+
+    /**
+     * Filters an array by keeping only the keys specified in the second argument.
+     *
+     * @param array $array The array to be filtered.
+     * @param array $keys The keys to keep in the array.
+     * @return array The filtered array.
+     */
+    public static function filterArrayByKeys($array, $keys)
+    {
+        return array_intersect_key($array, array_flip($keys));
     }
 }

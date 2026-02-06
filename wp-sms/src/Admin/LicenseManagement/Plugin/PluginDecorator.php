@@ -10,6 +10,8 @@ use WP_SMS\Admin\LicenseManagement\LicenseHelper;
 use WP_SMS\Admin\LicenseManagement\Plugin\PluginHandler;
 use WP_SMS\Utils\MenuUtil;
 
+if (!defined('ABSPATH')) exit;
+
 class PluginDecorator
 {
     private $plugin;
@@ -187,12 +189,6 @@ class PluginDecorator
         return $this->pluginHandler->isPluginActive($this->getSlug());
     }
 
-    public function getDownloadUrl()
-    {
-        $downloadUrl = $this->apiCommunicator->getDownloadUrlFromLicense($this->getLicenseKey(), $this->getSlug());
-        return $downloadUrl ?? null;
-    }
-
     public function getLicenseKey()
     {
         return LicenseHelper::getPluginLicense($this->getSlug());
@@ -321,5 +317,10 @@ class PluginDecorator
         }
 
         return version_compare($this->getVersion(), $installedPlugin['Version'], '>');
+    }
+
+    public function getUtmCampaign()
+    {
+        return str_replace('wp-sms-', '', $this->getSlug());
     }
 }

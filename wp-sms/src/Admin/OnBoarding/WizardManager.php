@@ -8,6 +8,8 @@ use WP_SMS\User\UserHelper;
 use WP_SMS\Utils\Request;
 use WP_SMS\Notice\NoticeManager;
 
+if (!defined('ABSPATH')) exit;
+
 class WizardManager
 {
     private $steps = array();
@@ -72,13 +74,10 @@ class WizardManager
         $setup_url = admin_url('admin.php?page=wp-sms&path=' . $this->slug);
 
         // Allow 'display' CSS property for inline styles
-        add_filter('safe_style_css', function ($styles) {
-            $styles[] = 'display';
-            return $styles;
-        });
+        add_filter('safe_style_css', [$this, 'allowDisplayStyle']);
         // Create the notice message with links
         $message = sprintf(
-            __('<span>%s<span style="display: flex;align-items: center;gap: 6px;margin-top: 8px" class="wpsms-admin-notice__action">%s %s</span></span>', 'wp-sms'),
+            '<span>%1$s<span style="display: flex;align-items: center;gap: 6px;margin-top: 8px" class="wpsms-admin-notice__action">%2$s %3$s</span></span>',
             __('WP SMS is now active! Before sending any messages, please configure your gateway and complete the setup process.', 'wp-sms'),
             '<a href="' . esc_url($setup_url) . '" class="button button-primary">' . __('Launch Setup Wizard', 'wp-sms') . '</a>',
             '<a href="' . esc_url(add_query_arg('wpsms_dismiss_activation_notice', '1')) . '" class="button">' . __('Dismiss', 'wp-sms') . '</a>'
@@ -98,10 +97,7 @@ class WizardManager
 
         $sanitized_message = wp_kses($message, $allowed_html);
         // Remove the filter to avoid affecting other inline styles
-        remove_filter('safe_style_css', function ($styles) {
-            $styles[] = 'display';
-            return $styles;
-        });
+        remove_filter('safe_style_css', [$this, 'allowDisplayStyle']);
 
         $noticeManager->registerNotice(
             'wp_sms_' . $this->slug . '_activation',
@@ -109,6 +105,19 @@ class WizardManager
             false,
             false
         );
+    }
+
+    /**
+     * Adds the 'display' CSS property to the list of allowed inline styles.
+     *
+     * @param array $styles
+     *
+     * @return array
+     */
+    public function allowDisplayStyle($styles)
+    {
+        $styles[] = 'display';
+        return $styles;
     }
 
     private function dismissActivationNotice()
@@ -130,6 +139,7 @@ class WizardManager
     {
         if ($this->isOnboarding()) {
             $stepTitle = method_exists($this->currentStep, 'getTitle') ? $this->currentStep->getTitle() : '';
+            /* translators: %s: step title */
             return sprintf(__('WP SMS Onboarding Process: %s', 'wp-sms'), $stepTitle ?: $this->title);
         }
 

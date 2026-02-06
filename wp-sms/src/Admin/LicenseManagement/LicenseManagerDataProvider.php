@@ -6,6 +6,8 @@ use WP_SMS\Exceptions\SystemErrorException;
 use WP_SMS\Admin\LicenseManagement\Plugin\PluginHelper;
 use WP_SMS\Utils\Request;
 
+if (!defined('ABSPATH')) exit;
+
 class LicenseManagerDataProvider
 {
     protected $args;
@@ -36,7 +38,7 @@ class LicenseManagerDataProvider
         $addOnsList = PluginHelper::getRemotePlugins();
 
         if (empty($addOnsList)) {
-            throw new SystemErrorException(esc_html__('Failed to retrieve the list of available add-ons. Please try again later.'));
+            throw new SystemErrorException(esc_html__('Failed to retrieve the list of available add-ons. Please try again later.', 'wp-sms'));
         }
 
         // Separate active and inactive add-ons
