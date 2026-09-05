@@ -5,7 +5,7 @@
  * admin label as a literal call so WordPress.org's scanner can collect the ones
  * minification hides inside the compiled bundle.
  *
- * Never enqueued, never executed.
+ * Enqueued as a translation anchor; the wrapper is intentionally not invoked.
  */
 ( function ( __, _x, _n, _nx ) {
 	__( "This is a test message from WSMS setup wizard.", "wp-sms" );
@@ -67,6 +67,7 @@
 	__( "Confirm your default country", "wp-sms" );
 	__( "Default country code", "wp-sms" );
 	__( "Select country code...", "wp-sms" );
+	__( "Search countries...", "wp-sms" );
 	__( "Back", "wp-sms" );
 	__( "Loading...", "wp-sms" );
 	__( "Continue", "wp-sms" );
@@ -572,7 +573,6 @@
 	__( "Only send SMS to phone numbers from selected countries.", "wp-sms" );
 	__( "Allowed Countries", "wp-sms" );
 	__( "Select countries...", "wp-sms" );
-	__( "Search countries...", "wp-sms" );
 	__( "SMS will only be sent to numbers from these countries.", "wp-sms" );
 	__( "Credit Display", "wp-sms" );
 	__( "Show Credit in Menu", "wp-sms" );
@@ -664,7 +664,6 @@
 	__( "All supported plugins and integrations", "wp-sms" );
 	__( "Chat with us", "wp-sms" );
 	__( "Chat with Us!", "wp-sms" );
-	__( "Chat with us on WhatsApp for instant support!", "wp-sms" );
 	__( "Emily Brown", "wp-sms" );
 	__( "Marketing Manager", "wp-sms" );
 	__( "Available 10AM-5PM PST", "wp-sms" );
