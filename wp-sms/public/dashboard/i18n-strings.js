@@ -97,7 +97,7 @@
 	__( "Not now", "wp-sms" );
 	__( "Checking...", "wp-sms" );
 	__( "Start check", "wp-sms" );
-	__( "We'll add +%s to numbers that are missing it, and normalize a few trunk-prefix variations. Numbers that are already in international format aren't touched.", "wp-sms" );
+	__( "We'll add +%s to numbers that are missing it, including numbers saved with a + but no country code, and normalize a few trunk-prefix variations. Valid international numbers aren't touched.", "wp-sms" );
 	__( "Review the changes", "wp-sms" );
 	__( "Wrong country?", "wp-sms" );
 	__( "Name", "wp-sms" );
@@ -207,6 +207,16 @@
 	__( "Cancel", "wp-sms" );
 	__( "Deleting...", "wp-sms" );
 	__( "Delete", "wp-sms" );
+	__( "Duplicate numbers found", "wp-sms" );
+	_n( "%1$d number appears more than once in the selected groups. Each number gets the message once, so %2$d duplicate entries will be skipped.", "%1$d numbers appear more than once in the selected groups. Each number gets the message once, so %2$d duplicate entries will be skipped.", 1, "wp-sms" );
+	__( "Number", "wp-sms" );
+	__( "Subscribers", "wp-sms" );
+	__( "(no name)", "wp-sms" );
+	__( "in %s", "wp-sms" );
+	__( "No group", "wp-sms" );
+	__( "To leave someone out, go back, open the group and untick them.", "wp-sms" );
+	__( "Go back", "wp-sms" );
+	__( "Send once per number", "wp-sms" );
 	__( "Export failed", "wp-sms" );
 	__( "Export", "wp-sms" );
 	__( "Select Media", "wp-sms" );
@@ -219,6 +229,7 @@
 	__( "Message", "wp-sms" );
 	__( "segment", "wp-sms" );
 	__( "segments", "wp-sms" );
+	__( "Insert:", "wp-sms" );
 	__( "Your message contains Unicode characters. This reduces the character limit per segment from 160 to 70 characters.", "wp-sms" );
 	__( "Message exceeds maximum of %s segments. Please shorten your message.", "wp-sms" );
 	__( "%s characters remaining in current segment", "wp-sms" );
@@ -235,6 +246,13 @@
 	__( "Search groups", "wp-sms" );
 	__( "Search roles", "wp-sms" );
 	__( "Search by name, email, or user ID...", "wp-sms" );
+	__( "Hide members", "wp-sms" );
+	__( "Show members", "wp-sms" );
+	__( "No active subscribers in this group", "wp-sms" );
+	__( "Untick members who should not get this message", "wp-sms" );
+	__( "Select the group to pick members", "wp-sms" );
+	__( "All", "wp-sms" );
+	__( "None", "wp-sms" );
 	__( "No groups match your search", "wp-sms" );
 	__( "No subscriber groups available", "wp-sms" );
 	__( "No roles match your search", "wp-sms" );
@@ -366,7 +384,6 @@
 	__( "Send SMS", "wp-sms" );
 	__( "Outbox", "wp-sms" );
 	__( "Scheduled", "wp-sms" );
-	__( "Subscribers", "wp-sms" );
 	__( "Privacy", "wp-sms" );
 	__( "Add-Ons", "wp-sms" );
 	__( "Overview", "wp-sms" );
@@ -402,7 +419,6 @@
 	__( "Resend Selected", "wp-sms" );
 	__( "Phone Number", "wp-sms" );
 	__( "Group", "wp-sms" );
-	__( "No group", "wp-sms" );
 	__( "Subscribed", "wp-sms" );
 	__( "Edit", "wp-sms" );
 	__( "Toggle Status", "wp-sms" );
@@ -693,7 +709,6 @@
 	__( "Open Animation", "wp-sms" );
 	__( "Select animation", "wp-sms" );
 	__( "How the chat window appears when opened.", "wp-sms" );
-	__( "None", "wp-sms" );
 	__( "Fade In", "wp-sms" );
 	__( "Slide Up", "wp-sms" );
 	__( "Colors", "wp-sms" );
@@ -754,7 +769,6 @@
 	__( "Default Group", "wp-sms" );
 	__( "Select a group", "wp-sms" );
 	__( "Automatically add new subscribers to this group.", "wp-sms" );
-	__( "All", "wp-sms" );
 	__( "Require SMS Verification", "wp-sms" );
 	__( "Subscribers must verify their phone number via SMS code.", "wp-sms" );
 	__( "Welcome SMS", "wp-sms" );
@@ -939,9 +953,9 @@
 	__( "Automatically prepend this country code to new phone numbers. Changing this will not update numbers already stored in the database.", "wp-sms" );
 	__( "Please select a country code. This is required for proper phone number storage.", "wp-sms" );
 	__( "Minimum Digits", "wp-sms" );
-	__( "Minimum number of digits required (excluding country code).", "wp-sms" );
+	__( "Shortest number allowed, counted as the user types it. A country code the user types counts too.", "wp-sms" );
 	__( "Maximum Digits", "wp-sms" );
-	__( "Maximum number of digits allowed (excluding country code).", "wp-sms" );
+	__( "Longest number allowed, counted as the user types it. A country code the user types counts too.", "wp-sms" );
 	__( "Phone Number Improvement", "wp-sms" );
 	__( "Review and update your phone numbers to include the country code for better delivery reliability.", "wp-sms" );
 	__( "Open Update Wizard", "wp-sms" );
@@ -997,6 +1011,14 @@
 	__( "Schedule SMS messages for later delivery or create recurring messages with WSMS Pro. Perfect for reminders, notifications, and automated campaigns.", "wp-sms" );
 	__( "Scheduled SMS", "wp-sms" );
 	__( "Repeating SMS", "wp-sms" );
+	__( "Subscriber name", "wp-sms" );
+	__( "Subscriber mobile number", "wp-sms" );
+	__( "Subscriber group", "wp-sms" );
+	__( "Subscription date", "wp-sms" );
+	__( "Unsubscribe link", "wp-sms" );
+	__( "WordPress user display name", "wp-sms" );
+	__( "WordPress user first name", "wp-sms" );
+	__( "WordPress user last name", "wp-sms" );
 	__( "Message sent. %d recipient(s) skipped — their country codes don't match your country restriction settings.", "wp-sms" );
 	__( "Message sent successfully to %d recipient(s)", "wp-sms" );
 	__( "No SMS gateway configured.", "wp-sms" );
@@ -1007,6 +1029,8 @@
 	__( "Compose Message", "wp-sms" );
 	__( "Sender ID", "wp-sms" );
 	__( "Type your message here...", "wp-sms" );
+	__( "Personal variables are only filled in when you send now. Scheduled and repeating messages are sent as written.", "wp-sms" );
+	__( "Each recipient gets their own copy with the variables filled in. Variables with no value for a recipient are left out.", "wp-sms" );
 	__( "Flash", "wp-sms" );
 	__( "This gateway doesn't support bulk SMS. Only the first number will receive the message.", "wp-sms" );
 	__( "Scheduling Options", "wp-sms" );
@@ -1137,7 +1161,6 @@
 	__( "Refresh subscribers", "wp-sms" );
 	__( "Quick Add", "wp-sms" );
 	__( "Name (optional)", "wp-sms" );
-	__( "Subscriber name", "wp-sms" );
 	__( "No groups available", "wp-sms" );
 	__( "Create a group first in the Groups page to organize your subscribers.", "wp-sms" );
 	__( "Select Group", "wp-sms" );
