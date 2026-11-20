@@ -1,1 +1,0 @@
-import{j as s}from"./dashboard-CV4SKiup.js";import{L as m}from"./dashboard-ByvlE1dn.js";import{g as a}from"./dashboard-DcC0ghWR.js";function r({className:r}){return s.jsx("div",{className:a("wsms-flex wsms-items-center wsms-justify-center wsms-py-12",r),children:s.jsx(m,{className:"wsms-h-6 wsms-w-6 wsms-animate-spin wsms-text-muted-foreground"})})}export{r as D};
